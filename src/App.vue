@@ -54,17 +54,31 @@ export default {
     return {
       title: 'AppMeet',
       drawer: false,
-      menuItems: [
-        {icon: 'home', title: 'Home', link: '/'},
-        {icon: 'supervisor_account', title: 'View Meetups', link: '/meetups'},
-        {icon: 'room', title: 'Organize Meetup', link: '/meetups/new'},
-        {icon: 'person', title: 'Profile', link: '/profile'},
-        {icon: 'face', title: 'Sign up', link: '/signup'},
-        {icon: 'lock_open', title: 'Sign in', link: '/signin'}
-      ],
       miniVariant: false,
       right: true,
       rightDrawer: false
+    }
+  },
+  computed: {
+    menuItems () {
+      let menuItems = [
+        {icon: 'home', title: 'Home', link: '/'},
+        {icon: 'face', title: 'Sign up', link: '/signup'},
+        {icon: 'lock_open', title: 'Sign in', link: '/signin'}
+      ]
+      if (this.userIsAuthenticated) {
+        menuItems = [
+          {icon: 'home', title: 'Home', link: '/'},
+          {icon: 'supervisor_account', title: 'View Meetups', link: '/meetups'},
+          {icon: 'room', title: 'Organize Meetup', link: '/meetups/new'},
+          {icon: 'person', title: 'Profile', link: '/profile'},
+          {icon: 'lock_open', title: 'Sign out', link: '/signout'}
+        ]
+      }
+      return menuItems
+    },
+    userIsAuthenticated () {
+      return this.$store.getters.user !== null && this.$store.getters.user !== undefined
     }
   },
   name: 'App'
