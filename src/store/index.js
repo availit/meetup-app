@@ -26,7 +26,8 @@ export const store = new Vuex.Store({
     ],
     user: null,
     loading: false,
-    error: null
+    error: null,
+    createdMeetupKey: ''
   },
   mutations: {
     setLoadedMeetups (state, payload) {
@@ -46,6 +47,9 @@ export const store = new Vuex.Store({
     },
     clearError (state) {
       state.error = null
+    },
+    setCreatedMeetupKey (state, payload) {
+      state.createdMeetupKey = payload
     }
   },
   actions: {
@@ -73,21 +77,41 @@ export const store = new Vuex.Store({
           commit('setLoading', false)
         })
     },
-    createMeetup ({commit, getters}, payload) {
+    createMeetup ({ commit, getters }, payload) {
       const meetup = {
         title: payload.title,
         location: payload.location,
-        imageUrl: payload.imageUrl,
         description: payload.description,
         date: payload.date.toISOString(),
         creatorId: getters.user.id
       }
+
+      let imageUrl
+      let key
+
       firebase.database().ref('meetups').push(meetup)
         .then((data) => {
-          const key = data.key
-          console.log(data)
+          return data.key
+        })
+        .then(key => {
+          const filename = payload.image.name
+          const ext = filename.slice(filename.lastIndexOf('.'))
+          commit('setCreatedMeetupKey', key)
+          return firebase.storage().ref('meetups/' + key + ext).put(payload.image)
+        })
+        .then(fileData => {
+          let fullPath = fileData.metadata.fullPath
+          return firebase.storage().ref(fullPath).getDownloadURL()
+        })
+        .then(URL => {
+          imageUrl = URL
+          key = getters.createdMeetupKey
+          return firebase.database().ref('meetups').child(key).update({imageUrl: imageUrl})
+        })
+        .then(() => {
           commit('createMeetup', {
             ...meetup,
+            imageUrl: imageUrl,
             id: key
           })
         })
@@ -174,6 +198,9 @@ export const store = new Vuex.Store({
     },
     error (state) {
       return state.error
+    },
+    createdMeetupKey (state) {
+      return state.createdMeetupKey
     }
   }
 })
