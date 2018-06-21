@@ -7,6 +7,7 @@ import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import DateFilter from './filters/date'
 import AlertCmp from './components/shared/Alert'
+import EditMeetupDetailsDialog from './components/Meetup/edit/EditMeetupDetailsDialog'
 
 // Helpers
 import colors from 'vuetify/es5/util/colors'
@@ -25,6 +26,7 @@ Vue.use(Vuetify, {
 
 Vue.filter('date', DateFilter)
 Vue.component('app-alert', AlertCmp)
+Vue.component('app-edit-meetup-details-dialog', EditMeetupDetailsDialog)
 
 Vue.config.productionTip = false
 
