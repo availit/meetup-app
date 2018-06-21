@@ -8,6 +8,9 @@
 # install dependencies
 npm install
 
+#create required environment variables
+touch .env
+
 # serve with hot reload at localhost:8080
 npm run dev
 
