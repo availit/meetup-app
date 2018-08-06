@@ -8,7 +8,7 @@
     </v-flex>
     <v-flex xs12 sm6 class="text-xs-center text-sm-left">
       <v-btn large router to="/meetups/new" class="accent">
-        Organize Meetup
+        Create Meetup
       </v-btn>
     </v-flex>
   </v-layout>
